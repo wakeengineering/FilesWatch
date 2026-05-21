@@ -1,0 +1,39 @@
+# Configuration files
+config.ini
+
+# Log files and directories
+logs/
+*.log
+fw-logs/
+changes.jsonl
+changes.txt
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backup files
+*.bak
+*.bkp
+*.bkp2

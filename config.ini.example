@@ -1,0 +1,22 @@
+[monitor]
+# Directories to watch (space-separated)
+paths = /path/to/watch1 /path/to/watch2
+
+# Paths to ignore (space-separated)
+ignore_paths = /path/to/watch1/ignore1 /path/to/watch1/ignore2
+
+# Log output directory
+log_dir = ./fw-logs
+
+# Run as daemon (background process)
+daemon_mode = false
+
+[logging]
+# Debounce delay in milliseconds
+debounce_ms = 500
+
+# Service name
+service_name = fileswatch
+
+# Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+log_level = INFO
