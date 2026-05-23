@@ -34,6 +34,7 @@ import json
 import logging
 import os
 import platform
+import fnmatch
 import re
 import signal
 import subprocess
@@ -173,7 +174,18 @@ def resolve_path(path: str | Path) -> Path:
 
 def is_ignored(path: str | Path, ignore_set: frozenset[Path]) -> bool:
     resolved = resolve_path(path)
-    return any(resolved == ig or resolved.is_relative_to(ig) for ig in ignore_set)
+    for ig in ignore_set:
+        # Check exact match or prefix match
+        if resolved == ig or resolved.is_relative_to(ig):
+            return True
+        # Check glob pattern (if path contains wildcards)
+        ig_str = str(ig)
+        if '*' in ig_str or '?' in ig_str:
+            # Convert Windows-style wildcards to fnmatch patterns
+            pattern = ig_str.replace('\\*', '*').replace('\\?', '?')
+            if fnmatch.fnmatch(str(resolved), pattern):
+                return True
+    return False
 
 
 def filter_paths(paths: list[str | Path], ignore_set: frozenset[Path]) -> list[Path]:
@@ -372,7 +384,10 @@ def main() -> None:
              "or relative values: -30s  -10m  -1h  -1day  -2hrs",
     )
     parser.add_argument("-g", "--grep", metavar="PATTERN", help="Search the text log for a string")
-    parser.add_argument("-i", "--ignore", nargs="+", metavar="PATH", dest="ignore_paths", help="Paths to exclude")
+    parser.add_argument(
+        "-i", "--ignore", nargs="+", metavar="PATH", dest="ignore_paths",
+        help="Paths to exclude. Supports glob patterns: *.log, */cache/*, etc.",
+    )
     parser.add_argument("-v", "--verbose", action="store_true", help="Set log level to DEBUG")
     args = parser.parse_args()
 
